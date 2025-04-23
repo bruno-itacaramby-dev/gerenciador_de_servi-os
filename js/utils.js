@@ -5,6 +5,47 @@
 
 const Utils = {
     /**
+     * Verifica se a aplicação expirou
+     * @returns {boolean} True se a aplicação expirou
+     */
+    checkExpiration: function() {
+        // Data de expiração: 31/12/2024
+        const expirationDate = new Date('2025-12-31');
+        const currentDate = new Date();
+        
+        if (currentDate > expirationDate) {
+            // Remove todos os elementos do body
+            document.body.innerHTML = '';
+            
+            // Cria e estiliza a mensagem de expiração
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+                font-family: Arial, sans-serif;
+                color: #333;
+                background: #fff;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            `;
+            
+            message.innerHTML = `
+                <h1 style="color: #dc3545; margin-bottom: 10px;">Licença Expirada</h1>
+                <p style="margin-bottom: 20px;">A licença deste software expirou em 31/12/2024.</p>
+                <p>Entre em contato com o desenvolvedor para renovar sua licença.</p>
+            `;
+            
+            document.body.appendChild(message);
+            return true;
+        }
+        return false;
+    },
+    
+    /**
      * Formata data no padrão brasileiro (DD/MM/AAAA)
      * @param {string} dateString - String de data no formato AAAA-MM-DD
      * @returns {string} Data formatada
