@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gerenciamento - Consertos Eletrônicos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Usando CDN para html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Bibliotecas externas para geração de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin para exibir valores nos gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="assets/monizalogo.png" alt="MonizaTech Refrigeração Logo" class="logo-img">
+            <h1>MonizaTech Refrigeração</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link active" data-page="dashboard">Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-page="servicos">Serviços</a></li>
+                <li><a href="#" class="nav-link" data-page="pecas">Peças</a></li>
+                <li><a href="#" class="nav-link" data-page="relatorios">Relatórios</a></li>
+                <li><a href="#" class="nav-link" data-page="graficos">Gráficos</a></li>
+                <li><a href="#" class="nav-link" data-page="notas">Notas</a></li>
+                <li><a href="#" class="nav-link" data-page="configuracoes">Configurações</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Páginas do sistema serão carregadas dinamicamente aqui -->
+        <div id="content-container">
+            <!-- Dashboard (página inicial) -->
+            <section id="dashboard" class="page active">
+                <h2>Dashboard</h2>
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <h3>Serviços Pendentes</h3>
+                        <p class="count">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Serviços Concluídos</h3>
+                        <p class="count">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Serviços Totais</h3>
+                        <p class="count">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Peças em Estoque</h3>
+                        <p class="count">0</p>
+                    </div>
+                </div>
+                
+                <div class="recent-services">
+                    <h3>Serviços Recentes</h3>
+                    <table id="recent-services-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Aparelho</th>
+                                <th>Status</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Será preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Serviços -->
+            <section id="servicos" class="page">
+                <h2>Gerenciamento de Serviços</h2>
+                
+                <div class="action-buttons">
+                    <button id="btn-novo-servico" class="btn primary">Novo Serviço</button>
+                </div>
+                
+                <div class="search-filter">
+                    <input type="text" id="search-service" placeholder="Buscar serviço...">
+                    <select id="filter-status">
+                        <option value="todos">Todos os Status</option>
+                        <option value="aberto">Aberto</option>
+                        <option value="concluido">Concluído</option>
+                    </select>
+                </div>
+                
+                <table id="servicos-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Telefone</th>
+                            <th>Aparelho</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Será preenchido via JavaScript -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Peças -->
+            <section id="pecas" class="page">
+                <h2>Gerenciamento de Peças</h2>
+                
+                <div class="action-buttons">
+                    <button id="btn-nova-peca" class="btn primary">Nova Peça</button>
+                </div>
+                
+                <div class="search-filter">
+                    <input type="text" id="search-peca" placeholder="Buscar peça...">
+                    <select id="filter-category">
+                        <option value="todas">Todas as Categorias</option>
+                        <option value="maquina_lavar">Máquina de Lavar</option>
+                        <option value="lava_loucas">Lava Louças</option>
+                        <option value="geladeira">Geladeira</option>
+                        <option value="micro_ondas">Micro-ondas</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                    <div class="checkbox-filter">
+                        <input type="checkbox" id="show-esgotadas" name="show-esgotadas">
+                        <label for="show-esgotadas">Exibir Esgotadas</label>
+                    </div>
+                </div>
+                
+                <table id="pecas-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descrição</th>
+                            <th>Categoria</th>
+                            <th>Quantidade</th>
+                            <th>Preço Unitário</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Será preenchido via JavaScript -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Relatórios -->
+            <section id="relatorios" class="page">
+                <h2>Relatórios</h2>
+                
+                <div class="reports-container">
+                    <div class="report-card">
+                        <h3>Relatório de Receita</h3>
+                        <div class="report-filters">
+                            <label for="report-period">Período</label>
+                            <select id="report-period">
+                                <option value="7dias">Últimos 7 dias</option>
+                                <option value="30dias">Últimos 30 dias</option>
+                                <option value="90dias">Últimos 90 dias</option>
+                                <option value="ano">Este ano</option>
+                                <option value="personalizado">Período personalizado</option>
+                            </select>
+                            <button id="btn-gerar-relatorio-receita" class="btn primary">Gerar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="report-result">
+                    <!-- Resultado dos relatórios serão exibidos aqui -->
+                </div>
+            </section>
+            
+            <!-- Notas -->
+            <section id="notas" class="page">
+                <h2>Emissão de Notas</h2>
+                
+                <div class="note-container">
+                    <div class="note-filters">
+                        <h3>Gerar Nota de Serviço</h3>
+                        <p>Selecione um serviço concluído para gerar a nota em PDF.</p>
+                        
+                        <div class="form-group">
+                            <label for="nota-servico-selector">Selecionar Serviço:</label>
+                            <select id="nota-servico-selector">
+                                <option value="">Selecione um serviço...</option>
+                                <!-- Será preenchido via JavaScript -->
+                            </select>
+                        </div>
+                        
+                        <div class="note-service-details">
+                            <!-- Detalhes do serviço selecionado serão exibidos aqui -->
+                        </div>
+                        
+                        <div class="form-buttons">
+                            <button id="btn-preview-nota" class="btn primary">Visualizar Nota</button>
+                            <button id="btn-generate-nota" class="btn success">Gerar PDF</button>
+                        </div>
+                    </div>
+                    
+                    <div class="note-preview">
+                        <!-- Preview da nota será inserido aqui -->
+                    </div>
+                    <div class="note-additional-items" style="margin-top: 20px; display: none;">
+                        <h3>Itens Adicionais</h3>
+                        <div class="additional-items-list" style="margin-bottom: 15px;">
+                            <!-- Lista de itens adicionais será inserida aqui -->
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <input type="text" id="additional-item-desc" class="form-control" placeholder="Descrição do item" style="width: 60%; display: inline-block; margin-right: 10px;">
+                            <input type="text" id="additional-item-value" class="form-control" placeholder="R$ 0,00" style="width: 30%; display: inline-block;">
+                        </div>
+                        <button id="btn-add-item" class="btn btn-primary" style="margin-bottom: 20px;">Adicionar Item</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Configurações -->
+            <section id="configuracoes" class="page">
+                <h2>Configurações do Sistema</h2>
+                
+                <div class="alert alert-danger">
+                    <strong>⚠️ Atenção!</strong> As ações nesta página podem resultar em perda permanente de dados. 
+                    Tenha cuidado ao exportar, importar ou limpar dados do sistema. Recomendamos fazer um backup antes de qualquer ação.
+                </div>
+                
+                <div class="config-container">
+                    <div class="config-card">
+                        <h3>Exportar Dados</h3>
+                        <p>Baixe todos os dados do sistema em formato JSON para backup ou transferência.</p>
+                        <button id="btn-exportar-dados" class="btn primary">Exportar Dados</button>
+                    </div>
+                    
+                    <div class="config-card">
+                        <h3>Importar Dados</h3>
+                        <p>Importe dados de um arquivo JSON válido. Esta ação substituirá todos os dados atuais.</p>
+                        <input type="file" id="input-importar-dados" accept=".json">
+                        <button id="btn-importar-dados" class="btn">Importar Dados</button>
+                    </div>
+                    
+                    <div class="config-card">
+                        <h3>Limpar Todos os Dados</h3>
+                        <p>⚠️ Esta ação apagará permanentemente todos os dados do sistema. Não é possível desfazer!</p>
+                        <button id="btn-limpar-dados" class="btn danger">Limpar Todos os Dados ⚠️</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gráficos -->
+            <section id="graficos" class="page">
+                <h2>Análise de Dados</h2>
+                
+                <div class="graficos-container">
+                    <div class="graficos-filters">
+                        <div class="form-group">
+                            <label for="grafico-periodo">Período</label>
+                            <select id="grafico-periodo" class="form-control">
+                                <option value="diario">Diário</option>
+                                <option value="mensal">Mensal</option>
+                                <option value="trimestral">Trimestral</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="grafico-data-inicio">Data Inicial</label>
+                                <input type="date" id="grafico-data-inicio" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="grafico-data-fim">Data Final</label>
+                                <input type="date" id="grafico-data-fim" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <button id="btn-atualizar-graficos" class="btn primary">Atualizar Gráficos</button>
+                    </div>
+                    
+                    <div class="graficos-content">
+                        <div class="grafico-card">
+                            <div class="grafico-header">
+                                <h3>Faturamento Total</h3>
+                                <button class="btn-fullscreen" data-grafico="faturamento" title="Expandir gráfico"></button>
+                            </div>
+                            <canvas id="grafico-faturamento"></canvas>
+                        </div>
+                        
+                        <div class="grafico-card">
+                            <div class="grafico-header">
+                                <h3>Receita de Serviços</h3>
+                                <button class="btn-fullscreen" data-grafico="servicos" title="Expandir gráfico"></button>
+                            </div>
+                            <canvas id="grafico-servicos"></canvas>
+                        </div>
+                        
+                        <div class="grafico-card">
+                            <div class="grafico-header">
+                                <h3>Receita de Peças</h3>
+                                <button class="btn-fullscreen" data-grafico="pecas" title="Expandir gráfico"></button>
+                            </div>
+                            <canvas id="grafico-pecas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal de Gráfico em Tela Cheia -->
+    <div id="modal-grafico-fullscreen" class="modal fullscreen-modal">
+        <div class="modal-content fullscreen-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-grafico-title">Gráfico em Tela Cheia</h2>
+            <div class="fullscreen-grafico-container">
+                <canvas id="grafico-fullscreen"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modais -->
+    <div id="modal-servico" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-servico-title">Novo Serviço</h2>
+            
+            <form id="form-servico">
+                <input type="hidden" id="servico-id">
+                
+                <div class="form-group">
+                    <label for="servico-cliente-nome">Nome do Cliente</label>
+                    <input type="text" id="servico-cliente-nome" placeholder="Nome completo" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="servico-cliente-telefone">Telefone</label>
+                        <input type="text" id="servico-cliente-telefone" placeholder="(00) 00000-0000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="servico-data">Data</label>
+                        <input type="date" id="servico-data" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="servico-aparelho">Aparelho</label>
+                    <input type="text" id="servico-aparelho" placeholder="Modelo e marca" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="servico-problema">Problema</label>
+                    <textarea id="servico-problema" placeholder="Descreva o problema" required></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="servico-valor">Valor do Serviço</label>
+                        <input type="text" id="servico-valor" name="servico-valor" class="form-control" value="R$ 0,00" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="servico-status">Status</label>
+                        <select id="servico-status" required>
+                            <option value="aberto">Aberto</option>
+                            <option value="concluido">Concluído</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" id="btn-cancelar-servico" class="btn">Cancelar</button>
+                    <button type="submit" class="btn primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal de Peça -->
+    <div id="modal-peca" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-peca-title">Nova Peça</h2>
+            
+            <form id="form-peca">
+                <div class="form-group">
+                    <label for="peca-codigo">Código</label>
+                    <input type="text" id="peca-codigo" placeholder="Código da peça" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="peca-descricao">Descrição</label>
+                    <input type="text" id="peca-descricao" placeholder="Descrição da peça" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="peca-categoria">Categoria</label>
+                    <select id="peca-categoria" required>
+                        <option value="placas">Placas</option>
+                        <option value="motores">Motores</option>
+                        <option value="componentes">Componentes</option>
+                        <option value="acessorios">Acessórios</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="peca-quantidade">Quantidade</label>
+                        <input type="number" id="peca-quantidade" min="0" step="1" value="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="peca-preco">Preço Unitário (R$)</label>
+                        <input type="text" id="peca-preco" value="R$ 0,00" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="peca-status">Status</label>
+                    <select id="peca-status" required>
+                        <option value="disponivel">Disponível</option>
+                        <option value="esgotada">Esgotada</option>
+                    </select>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" id="btn-cancelar-peca" class="btn">Cancelar</button>
+                    <button type="submit" class="btn primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal de Venda de Peça -->
+    <div id="modal-venda-peca" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Venda de Peça</h2>
+            
+            <form id="form-venda-peca">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="venda-peca-codigo">Código</label>
+                        <input type="text" id="venda-peca-codigo" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venda-peca-descricao">Descrição</label>
+                        <input type="text" id="venda-peca-descricao" disabled>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="venda-peca-quantidade-disponivel">Quantidade Disponível</label>
+                        <input type="number" id="venda-peca-quantidade-disponivel" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venda-peca-quantidade">Quantidade a Vender</label>
+                        <input type="number" id="venda-peca-quantidade" min="1" value="1" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="venda-peca-preco-unitario">Preço Unitário (R$)</label>
+                        <input type="text" id="venda-peca-preco-unitario" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venda-peca-preco-venda">Preço de Venda (R$)</label>
+                        <input type="text" id="venda-peca-preco-venda" value="R$ 0,00" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="venda-peca-lucro">Lucro (R$)</label>
+                        <input type="text" id="venda-peca-lucro" disabled>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="venda-peca-data">Data da Venda</label>
+                    <input type="date" id="venda-peca-data" required>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" id="btn-cancelar-venda-peca" class="btn">Cancelar</button>
+                    <button type="submit" class="btn primary">Registrar Venda</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal de Período Personalizado -->
+    <div id="modal-periodo-personalizado" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Selecione o Período</h2>
+            
+            <form id="form-periodo-personalizado">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="periodo-personalizado-from">De</label>
+                        <input type="date" id="periodo-personalizado-from" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="periodo-personalizado-to">Até</label>
+                        <input type="date" id="periodo-personalizado-to" required>
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" id="btn-cancelar-periodo-personalizado" class="btn">Cancelar</button>
+                    <button type="button" id="btn-confirmar-periodo-personalizado" class="btn primary">Gerar Relatório</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/pecas.js"></script>
+    <script src="js/servicos.js"></script>
+    <script src="js/relatorios.js"></script>
+    <script src="js/configuracoes.js"></script>
+    <script src="js/notas.js"></script>
+    <script src="js/graficos.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html> 

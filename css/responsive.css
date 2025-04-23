@@ -1,0 +1,197 @@
+/* Estilos responsivos */
+
+/* Para tablets e dispositivos menores */
+@media screen and (max-width: 992px) {
+    header {
+        padding: 1rem;
+    }
+    
+    main {
+        padding: 1.5rem;
+    }
+    
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .reports-container {
+        grid-template-columns: 1fr;
+    }
+    
+    table {
+        font-size: 0.9rem;
+    }
+    
+    table th, 
+    table td {
+        padding: 0.75rem;
+    }
+}
+
+/* Para smartphones */
+@media screen and (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 1rem 0.5rem;
+    }
+    
+    .logo {
+        margin-bottom: 1rem;
+    }
+    
+    nav ul {
+        width: 100%;
+        justify-content: space-around;
+    }
+    
+    nav ul li {
+        margin: 0;
+    }
+    
+    nav ul li a {
+        font-size: 0.9rem;
+        padding: 0.4rem 0;
+    }
+    
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-filter {
+        flex-direction: column;
+    }
+    
+    /* Ajustes nas tabelas para telas pequenas */
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    /* Ajustes nos formulários */
+    .form-buttons {
+        flex-direction: column;
+    }
+    
+    .form-buttons button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Ajuste no modal */
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+        margin: 10% auto;
+    }
+
+    .note-additional-items {
+        padding: 10px;
+    }
+
+    .note-additional-items h3 {
+        font-size: 1em;
+    }
+
+    .additional-items-list {
+        max-height: 150px;
+    }
+
+    .additional-item {
+        padding: 6px;
+        font-size: 0.9em;
+    }
+
+    .note-additional-items input {
+        padding: 6px;
+        font-size: 0.9em;
+    }
+
+    .note-additional-items button {
+        padding: 6px 12px;
+        font-size: 0.9em;
+    }
+}
+
+/* Para telas muito pequenas */
+@media screen and (max-width: 480px) {
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .card .count {
+        font-size: 1.5rem;
+    }
+    
+    nav ul li a {
+        font-size: 0.8rem;
+    }
+    
+    .table-actions {
+        flex-direction: column;
+    }
+    
+    .table-actions button {
+        width: 100%;
+        margin-bottom: 0.3rem;
+    }
+    
+    .report-filters label {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .note-additional-items {
+        padding: 8px;
+    }
+
+    .additional-items-list {
+        max-height: 120px;
+    }
+
+    .additional-item {
+        padding: 4px;
+        font-size: 0.85em;
+    }
+
+    .note-additional-items .buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .note-additional-items button {
+        width: 100%;
+    }
+}
+
+/* Estilos responsivos para Configurações */
+@media (max-width: 768px) {
+    .config-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .config-card {
+        margin-bottom: 15px;
+    }
+    
+    .alert {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    #configuracoes h2 {
+        font-size: 1.5rem;
+    }
+    
+    .config-card h3 {
+        font-size: 1.2rem;
+    }
+    
+    .btn-limpar-dados {
+        width: 100%;
+    }
+    
+    #input-importar-dados {
+        font-size: 0.9rem;
+    }
+} 
