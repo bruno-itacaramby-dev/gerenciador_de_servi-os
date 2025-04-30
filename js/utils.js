@@ -10,7 +10,7 @@ const Utils = {
      */
     checkExpiration: function() {
         // Data de expiração: 31/12/2024
-        const expirationDate = new Date('2025-04-30'); //ANO - MES - DIA
+        const expirationDate = new Date('2025-05-10'); //ANO - MES - DIA
         const currentDate = new Date();
         
         if (currentDate > expirationDate) {
